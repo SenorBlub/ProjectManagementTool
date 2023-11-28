@@ -1,0 +1,35 @@
+﻿@model ProjectManagementTool.Models.TasksViewModel
+
+<div class="container-fluid h-100 w-100 overflow-auto">
+<div class="accordion accordion-flush">
+	@foreach (Models.Task task in Model.tasks)
+	{
+		<div class="accordion-item" id="accordion">
+			<h2 class="accordion-header">
+				<button class="accordion-button" id="button-@task.guid" type="button" data-bs-toggle="collapse" data-bs-target="#@task.guid" aria-expanded="false" aria-controls="@task.guid">
+					@task.title
+					@if (task.isNew)
+					{
+						<p> </p>
+						<span class="badge bg-secondary">New</span>
+					}
+				</button>
+			</h2>
+			<div id="@task.guid" class="accordion-collapse collapse" data-bs-parent="#accordion">
+				<div class="accordion-body">
+					<p>
+						@task.description
+					</p>
+					<h6>
+						Due @task.deadline
+					</h6>
+					@if (task.deadline <= DateTime.Now)
+					{
+						<span class="badge bg-danger">Late</span>
+					}
+				</div>
+			</div>
+		</div>
+	}
+</div>
+</div>
