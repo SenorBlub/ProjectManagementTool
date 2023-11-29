@@ -1,2 +1,28 @@
-﻿@model Task
+﻿@model ProjectManagementTool.Models.Projects
 
+<div class="container-fluid h-100 w-100 overflow-auto">
+	<div class="accordion accordion-flush">
+		@foreach (Models.Project project in Model.projects)
+		{
+			<div class="accordion-item" id="accordion">
+				<h2 class="accordion-header">
+					<button class="accordion-button" id="button-@project.guid" type="button" data-bs-toggle="collapse" data-bs-target="#@project.guid" aria-expanded="false" aria-controls="@task.guid">
+						@project.title
+						@if (project.isNew)
+						{
+							<p> </p>
+							<span class="badge bg-secondary">New</span>
+						}
+					</button>
+				</h2>
+				<div id="@project.guid" class="accordion-collapse collapse" data-bs-parent="#accordion">
+					<div class="accordion-body">
+						<p>
+							@project.description
+						</p>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</div>

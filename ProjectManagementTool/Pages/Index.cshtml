@@ -1,13 +1,55 @@
 ﻿@page
+@using ProjectManagementTool.Models
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
 }
 
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - ProjectManagementTool</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/ProjectManagementTool.styles.css" asp-append-version="true" />
+</head>
+
+<body>
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+	<h1 class="display-4">Welcome</h1>
 	<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+	<button type="submit" class="btn btn-primary" id="liveToastBtn">Show live toast</button>
+
+	<div class="toast-container position-fixed bottom-0 end-0 p-3">
+		@await Html.PartialAsync("Shared/AlertToast", new ToastModel
+		{
+			Message = "I am a test string made to test the content of this component.",
+			PostTime = (DateTime.Now.AddHours(-2)),
+			Title = "Hi, I am toast!"
+
+		})
+	</div>
+
+
 	<form method="post">
 		<button type="submit" asp-page="/MainOverview">Go to Target Page</button>
 	</form>
+
+	
 </div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+<script>
+    // JavaScript to handle button click and show the toast
+    document.getElementById('liveToastBtn').addEventListener('click', function () {
+        var toastElement = document.getElementById('liveToast');
+        var toast = new bootstrap.Toast(toastElement);
+        toast.show();
+    });
+</script>
+
+</body>

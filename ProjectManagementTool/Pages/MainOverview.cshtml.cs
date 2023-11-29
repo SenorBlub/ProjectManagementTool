@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ProjectManagementTool.Pages
 {
-    public class ProjectOverviewModel : PageModel
+    public class MainOverviewModel : PageModel
     {
         public void OnGet()
         {

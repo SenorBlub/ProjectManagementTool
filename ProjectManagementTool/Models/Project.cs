@@ -13,4 +13,6 @@ public class Project
     public Goal goal { get; set; }
 
     public List<Employee> assignees { get; set; }
+
+    public bool isNew { get; set; }
 }

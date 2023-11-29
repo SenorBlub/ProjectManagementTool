@@ -1,9 +1,7 @@
-﻿@page
-@using ProjectManagementTool.Models
-@using Task = ProjectManagementTool.Models.Task
-@model MainOverviewModel
+﻿@page "/projectOverview/{id}"
+@model ProjectManagementTool.Pages.ProjectOverviewModel
 @{
-	ViewData["Title"] = "Main overview";
+	ViewData["Title"] = "Project overview";
 	Layout = null;
 }
 
@@ -58,69 +56,7 @@
 	</div>
 
 	<div class="container-fluid p-2" style="height: 80%">
-		<div class="d-flex flex-row h-100 gap-2">
-			<div class="d-flex flex-column w-25 gap-2">
-				<div class="h-50 border p-2 gap-2" id="tasks">
-					@await Html.PartialAsync("Shared/TasksView", new TasksViewModel
-					{
-						tasks = new List<Task>
-						{
-							new Task
-							{
-								deadline = DateTime.Now,
-								description = "This is a dummy description used for testing, please let me know if you see this after the testing phase since you shouldn't be seeing this.",
-								isNew = true,
-								title = "Task #1",
-								guid = Guid.NewGuid()
-
-							},
-							new Task
-							{
-								deadline = DateTime.Now,
-								description = "This is a dummy description used for testing, please let me know if you see this after the testing phase since you shouldn't be seeing this.",
-								isNew = true,
-								title = "Task #2",
-								guid = Guid.NewGuid()
-
-							}
-						}
-					})
-				</div>
-				<div class="h-50 border p-2 gap-2" id="deadlines"> deadlines overview </div>
-			</div>
-			<div class="d-flex flex-column w-75 gap-2">
-			<div class="h-25 border p-2 gap-2" id="Goal"> 
-			@await Html.PartialAsync("Shared/GoalView", new Goal
-					{
-						guid = Guid.NewGuid(),
-						completionPercentage = 15,
-						projectGuid = Guid.NewGuid(),
-						tasks = new List<Task>
-						{
-							new Task
-							{
-								deadline = DateTime.Now,
-								description = "This is a dummy description used for testing, please let me know if you see this after the testing phase since you shouldn't be seeing this.",
-								isNew = true,
-								title = "Task #1",
-								guid = Guid.NewGuid()
-
-							},
-							new Task
-							{
-								deadline = DateTime.Now,
-								description = "This is a dummy description used for testing, please let me know if you see this after the testing phase since you shouldn't be seeing this.",
-								isNew = true,
-								title = "Task #2",
-								guid = Guid.NewGuid()
-
-							}
-						}
-					})
-			</div>
-				<div class="h-75 border p-2 gap-2" id="projects"> project overview </div>
-			</div>
-		</div>
+		<h1> @Model.projectId </h1>
 	</div>
 
 	<div class="border" style="height: 10%">
