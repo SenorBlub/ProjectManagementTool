@@ -6,7 +6,7 @@
 		{
 			<div class="accordion-item" id="accordion">
 				<h2 class="accordion-header">
-					<button class="accordion-button" id="button-@project.guid" type="button" data-bs-toggle="collapse" data-bs-target="#@project.guid" aria-expanded="false" aria-controls="@task.guid">
+					<button class="accordion-button" id="button-@project.guid" type="button" data-bs-toggle="collapse" data-bs-target="#@project.guid" aria-expanded="false" aria-controls="@project.guid">
 						@project.title
 						@if (project.isNew)
 						{
@@ -20,6 +20,8 @@
 						<p>
 							@project.description
 						</p>
+						
+						<a class="btn btn-secondary" asp-page="/projectOverview" asp-route-id="@project.guid">View project</a>
 					</div>
 				</div>
 			</div>

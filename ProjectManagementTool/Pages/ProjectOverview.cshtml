@@ -1,8 +1,74 @@
 ﻿@page "/projectOverview/{id}"
+@using ProjectManagementTool.Models
+@using Task = ProjectManagementTool.Models.Task
 @model ProjectManagementTool.Pages.ProjectOverviewModel
 @{
 	ViewData["Title"] = "Project overview";
 	Layout = null;
+
+	List<Task> tasks = new List<Task>
+	{
+		new Task
+		{
+			deadline = DateTime.Now,
+			description = "This is a dummy description used for testing, please let me know if you see this after the testing phase since you shouldn't be seeing this.",
+			isNew = true,
+			title = "Task #1",
+			guid = Guid.NewGuid()
+
+		},
+		new Task
+		{
+			deadline = DateTime.Now,
+			description = "This is a dummy description used for testing, please let me know if you see this after the testing phase since you shouldn't be seeing this.",
+			isNew = true,
+			title = "Task #2",
+			guid = Guid.NewGuid()
+
+		}
+	}; //remove later
+
+	List<Employee> employees = new List<Employee>
+	{
+		new Employee
+		{
+			email = "fakeemail1@test.com",
+			guid = Guid.NewGuid(),
+			name = "fakename 1"
+		},
+		new Employee
+		{
+			email = "fakeemail2@test.com",
+			guid = Guid.NewGuid(),
+			name = "fakename 2"
+		},
+		new Employee
+		{
+			email = "fakeemail3@test.com",
+			guid = Guid.NewGuid(),
+			name = "fakename 3"
+		}
+	};
+
+	Goal goal = new Goal
+	{
+		guid = Guid.NewGuid(),
+		completionPercentage = 15,
+		projectGuid = Guid.NewGuid(),
+		tasks = tasks
+	};
+
+	Models.Project project = new Project
+	{
+		tasks = tasks,
+		assignees = employees,
+		goal = goal,
+		description = "This is a dummy description used for testing, please let me know if you see this after the testing phase since you shouldn't be seeing this.",
+		title = "Project #1",
+		isNew = false,
+		guid = Guid.NewGuid()
+
+	}; // < make this take the project with the GUID "@Model.projectId" this way the page displays relevant data to the project
 }
 
 <head>
@@ -56,11 +122,34 @@
 	</div>
 
 	<div class="container-fluid p-2" style="height: 80%">
-		<h1> @Model.projectId </h1>
-	</div>
+		<div class="d-flex flex-column h-100 gap-2">
+			<div class="d-flex flex-row border" style="height: 10%">
+				<div class="border" style="width: 60%">
+					<h2>@project.title</h2>
+				</div>
+				<div class="d-flex flex-row border" style="width: 40%">
+					<div class="w-75">
+						<h3> Assignees </h3>
+					</div> 
+					<button class="btn btn-secondary w-25"> + </button>
+				</div>
+			</div>
+			<div class="border h-75 overflow-y-scroll">
+				@project.description
+			</div>
+			<div class="d-flex flex-row overflow-y-scroll" style="height: 40%;">
+				<div class="border w-50">
+					@await Html.PartialAsync("Shared/TasksView", new TasksViewModel{tasks = project.tasks})
+				</div>
+				<div class="border w-50">
+					temporary filler text, this has to be replaced together with the div left of here since the view isn't the way I envisioned it in the design document.
+				</div>
+			</div>
+		</div>
+		</div>
 
-	<div class="border" style="height: 10%">
-
+	<div class="border p-2" style="height: 15%">
+		@await Html.PartialAsync("Shared/GoalView", project.goal)
 	</div>
 
 </div>
