@@ -57,8 +57,44 @@ public class EmployeeRepository
     }
 
     // PostEmployee to add an employee
+    public void PostEmployee(Employee employee)
+    {
+        _connection.Open();
+        string query = "INSERT INTO Employee (guid, name, email) VALUES (@id, @name, @email)";
+        using MySqlCommand command = new MySqlCommand(query, _connection);
 
+        command.Parameters.AddWithValue("@id", employee.guid);
+        command.Parameters.AddWithValue("@name", employee.name);
+        command.Parameters.AddWithValue("@email", employee.email);
+
+        command.ExecuteNonQuery();
+        _connection.Close();
+    }
 
     // UpdateEmployee to edit a single employee by ID
+    public void UpdateEmployee(Employee employee, Guid id)
+    {
+        _connection.Open();
+        string query = "Update Employee SET guid = @id, name =  @name, email = @email";
+        using MySqlCommand command = new MySqlCommand(query, _connection);
+
+        command.Parameters.AddWithValue("@id", employee.guid);
+        command.Parameters.AddWithValue("@name", employee.name);
+        command.Parameters.AddWithValue("@email", employee.email);
+
+        command.ExecuteNonQuery();
+        _connection.Close();
+    }
+
     // DeleteEmployee to delete a single employee by ID
+    public void DeleteEmployee(Guid id)
+    {
+        _connection.Open();
+        string query = "DELETE FROM Employee WHERE guid = @id";
+        var command = new MySqlCommand(query, _connection);
+        command.Parameters.AddWithValue("@id", id);
+
+        command.ExecuteNonQuery();
+        _connection.Close();
+    }
 }
