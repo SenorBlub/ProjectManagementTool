@@ -56,6 +56,30 @@ public class EmployeeRepository
         return employees;
     }
 
+    // GetEmployees to get all employees
+    public List<Models.Employee> GetProjectEmployees(Guid id)
+    {
+        List<Models.Employee> employees = new List<Models.Employee>();
+        _connection.Open();
+        string query = "SELECT * FROM EmployeeProject RIGHT JOIN Employee ON EmployeeProject.employeeGuid = Employee.guid WHERE projectGuid = @id";
+        using MySqlCommand command = new MySqlCommand(query, _connection);
+        command.Parameters.AddWithValue("@id", id);
+
+        using MySqlDataReader reader = command.ExecuteReader();
+
+        while (reader.Read())
+        {
+            employees.Add(new Employee
+            {
+                email = reader["email"].ToString(),
+                name = reader["name"].ToString(),
+                guid = (Guid)reader["employeeGuid"]
+            });
+        }
+        _connection.Close();
+        return employees;
+    }
+
     // PostEmployee to add an employee
     public void PostEmployee(Employee employee)
     {

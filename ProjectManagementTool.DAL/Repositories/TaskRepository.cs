@@ -112,7 +112,7 @@ namespace ProjectManagementTool.DAL.Repositories
             {
                 tasks.Add(new Models.Task
                 {
-                    guid = (Guid)reader["guid"],
+                    guid = (Guid)reader["taskGuid"],
                     description = reader["description"].ToString(),
                     title = reader["title"].ToString(),
                     deadline = (DateTime)reader["deadline"],
@@ -138,7 +138,7 @@ namespace ProjectManagementTool.DAL.Repositories
             {
                 tasks.Add(new Models.Task
                 {
-                    guid = (Guid)reader["guid"],
+                    guid = (Guid)reader["taskGuid"],
                     description = reader["description"].ToString(),
                     title = reader["title"].ToString(),
                     deadline = (DateTime)reader["deadline"],
