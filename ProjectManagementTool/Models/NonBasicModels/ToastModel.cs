@@ -1,4 +1,4 @@
-﻿namespace ProjectManagementTool.Models;
+﻿namespace ProjectManagementTool.Models.NonBasicModels;
 
 public class ToastModel
 {
