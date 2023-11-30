@@ -19,6 +19,7 @@ namespace ProjectManagementTool.DAL.Repositories
         // GetTask to get a task by ID
         public Models.Task GetTask(Guid id)
         {
+            Models.Task task = new Task();
             _connection.Open();
             string query = "SELECT * FROM Task WHERE guid = @taskId";
             MySqlCommand command = new MySqlCommand(query, _connection);
@@ -28,7 +29,7 @@ namespace ProjectManagementTool.DAL.Repositories
 
             while (reader.Read())
             {
-                Models.Task task = new Models.Task
+                task = new Task
                 {
                     guid = (Guid)reader["guid"],
                     description = reader["description"].ToString(),
@@ -36,10 +37,9 @@ namespace ProjectManagementTool.DAL.Repositories
                     deadline = (DateTime)reader["deadline"],
                     isNew = (bool)reader["isNew"]
                 };
-                _connection.Close();
-                return task;
             }
-
+            _connection.Close();
+            return task;
         }
 
         // GetAllTasks to get all tasks
@@ -53,7 +53,7 @@ namespace ProjectManagementTool.DAL.Repositories
 
             List<Models.Task> tasks = new List<Models.Task>();
 
-            if (reader.Read())
+            while (reader.Read())
             {
                 tasks.Add(new Models.Task
                 {
@@ -63,12 +63,10 @@ namespace ProjectManagementTool.DAL.Repositories
                     deadline = (DateTime)reader["deadline"],
                     isNew = (bool)reader["isNew"]
                 });
-                _connection.Close();
-                return tasks;
             }
 
             _connection.Close();
-            return null; // Return null if the task with the specified ID is not found
+            return tasks; // Return null if the task with the specified ID is not found
         }
 
         // GetEmployeeTasks to get all tasks that are associated with a single employee by ID
@@ -83,7 +81,7 @@ namespace ProjectManagementTool.DAL.Repositories
 
             List<Models.Task> tasks = new List<Models.Task>();
 
-            if (reader.Read())
+            while (reader.Read())
             {
                 tasks.Add(new Models.Task
                 {
@@ -93,12 +91,10 @@ namespace ProjectManagementTool.DAL.Repositories
                     deadline = (DateTime)reader["deadline"],
                     isNew = (bool)reader["isNew"]
                 });
-                _connection.Close();
-                return tasks;
             }
 
             _connection.Close();
-            return null;
+            return tasks;
         }
 
         // GetProjectTasks to get all tasks that are associated with a single project by ID
@@ -112,7 +108,7 @@ namespace ProjectManagementTool.DAL.Repositories
 
             List<Models.Task> tasks = new List<Models.Task>();
 
-            if (reader.Read())
+            while (reader.Read())
             {
                 tasks.Add(new Models.Task
                 {
@@ -122,12 +118,35 @@ namespace ProjectManagementTool.DAL.Repositories
                     deadline = (DateTime)reader["deadline"],
                     isNew = (bool)reader["isNew"]
                 });
-                _connection.Close();
-                return tasks;
             }
-
             _connection.Close();
-            return null; // Return null if the task with the specified ID is not found
+            return tasks; // Return null if the task with the specified ID is not found
+        }
+
+        // get all tasks associated with a certain goal
+        public IEnumerable<Models.Task> GetGoalTasks(Guid id)
+        {
+            _connection.Open();
+            string query = "SELECT * FROM GoalTask WHERE goalGuid = @id RIGHT JOIN Task ON GoalTask.taskGuid = Task.Guid";
+            MySqlCommand command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@id", id);
+            using MySqlDataReader reader = command.ExecuteReader();
+
+            List<Models.Task> tasks = new List<Models.Task>();
+
+            while (reader.Read())
+            {
+                tasks.Add(new Models.Task
+                {
+                    guid = (Guid)reader["guid"],
+                    description = reader["description"].ToString(),
+                    title = reader["title"].ToString(),
+                    deadline = (DateTime)reader["deadline"],
+                    isNew = (bool)reader["isNew"]
+                });
+            }
+            _connection.Close();
+            return tasks;
         }
 
         // PostTask to add a task
