@@ -54,7 +54,7 @@ public class GoalRepository
             completionPercentage = (int)reader["completionPercentage"],
             tasks = (new TaskRepository()).GetGoalTasks((Guid)reader["guid"]).ToList()
             });
-    }
+        }
         return goals;
     }
 
