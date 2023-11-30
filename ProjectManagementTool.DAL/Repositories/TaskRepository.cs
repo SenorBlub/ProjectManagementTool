@@ -21,27 +21,25 @@ namespace ProjectManagementTool.DAL.Repositories
         {
             _connection.Open();
             string query = "SELECT * FROM Task WHERE guid = @taskId";
-            var command = new MySqlCommand(query, _connection);
+            MySqlCommand command = new MySqlCommand(query, _connection);
             command.Parameters.AddWithValue("@taskId", id);
 
             using MySqlDataReader reader = command.ExecuteReader();
 
-                if (reader.Read())
+            while (reader.Read())
+            {
+                Models.Task task = new Models.Task
                 {
-                    var task = new Models.Task
-                    {
-                        guid = (Guid)reader["guid"],
-                        description = reader["description"].ToString(),
-                        title = reader["title"].ToString(),
-                        deadline = (DateTime)reader["deadline"],
-                        isNew = (bool)reader["isNew"]
-                    };
-                    _connection.Close();
-                    return task;
-                }
-            
-            _connection.Close();
-            return null; // Return null if the task with the specified ID is not found
+                    guid = (Guid)reader["guid"],
+                    description = reader["description"].ToString(),
+                    title = reader["title"].ToString(),
+                    deadline = (DateTime)reader["deadline"],
+                    isNew = (bool)reader["isNew"]
+                };
+                _connection.Close();
+                return task;
+            }
+
         }
 
         // GetAllTasks to get all tasks
