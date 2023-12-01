@@ -4,7 +4,7 @@
 @using Task = ProjectManagementTool.Models.Task
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using ProjectManagementTool.DAL.Repositories
-@model MainOverviewModel
+@model ProjectCreatorModel
 @{
 	ViewData["Title"] = "Main overview";
 	Layout = null;
@@ -64,35 +64,65 @@
 			</div>
 		</nav>
 	</div>
-
 	<div class="container mt-4">
     <h2>Create Project</h2>
-    <form method="post">
-	    <div class="mb-3">
-            <label for="projectTitle" class="form-label">Project Title</label>
-            <input type="text" class="form-control" id="projectTitle" name="ProjectTitle" required>
-        </div>
 
-        <div class="mb-3">
-            <label for="projectDescription" class="form-label">Project Description</label>
-            <textarea class="form-control" id="projectDescription" name="ProjectDescription" rows="3"></textarea>
-        </div>
+		<div class="mb-3 border d-flex flex-row">
+		    <div class="container-fluid">@await Html.PartialAsync("Shared/TaskCreator", Model.projectCreationModel)</div>
+		    @{
+			    if (Model.projectCreationModel.Tasks.Count != 0)
+			    {
+				    <div class="container-fluid">@await Html.PartialAsync("Shared/TasksView", new TasksViewModel { tasks = Model.projectCreationModel.Tasks })</div>
+			    }
+			    else
+			    {
+				    <div class="container-fluid">@await Html.PartialAsync("Shared/TasksView", new TasksViewModel { tasks = null })</div>
+			    }
+		    }
 
-    <div class="mb-3 border">
-	    @await Html.PartialAsync("Shared/TaskCreator")
-    </div>
+		    
+	    </div>
         
+		<form method="post" id="AssigneeForm" asp-page-handler="AddAssignee">
+			<div class="mb-3">
+				<h4>Assignees</h4>
+				<div class="d-flex flex-row">
+					<div class="mb-2">
+						<label for="assigneeID" class="form-label">Assignee ID</label>
+						<input type="text" class="form-control" id="assigneeID" name="AssigneeID">
+					</div>
+					<div class="container-fluid h-100 w-100 overflow-auto">
+						<h4>Assigned Employees</h4>
+						@if (Model.projectCreationModel.employees.Count != 0)
+						{
+							foreach (Guid employee in Model.projectCreationModel.employees)
+							{
+								<div>@employee</div>
+							}
+						}
+						else
+						{
+							<p>No employees assigned</p>
+						}
+					</div>
 
-        <div class="mb-3">
-            <h4>Assignees</h4>
-	        <div class="mb-2">
-                <label for="assigneeID" class="form-label">Assignee ID</label>
-                <input type="text" class="form-control" id="assigneeID" name="AssigneeID">
-            </div>
-        </div>
+				</div>
+				<button type="submit" class="btn btn-primary" id="AddAssignee">Add Assignee</button>
+			</div>
+			</form>
+			
+		<form method="post" asp-page-handler="ProjectOnly">
+			<div class="mb-3">
+				<label for="projectTitle" class="form-label">Project Title</label>
+				<input type="text" class="form-control" id="projectTitle" name="ProjectTitle" required>
+			</div>
 
-        <button type="submit" class="btn btn-primary">Create Project</button>
-    </form>
+			<div class="mb-3">
+				<label for="projectDescription" class="form-label">Project Description</label>
+				<textarea class="form-control" id="projectDescription" name="ProjectDescription" rows="3"></textarea>
+			</div>
+			<button type="submit" class="btn btn-primary">Create Project</button>
+		</form>
 </div>
 </div>
 

@@ -1,28 +1,27 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ProjectManagementTool.Models.NonBasicModels.ProjectCreationModel	
+@{
 	List<Models.Task> tasks = new List<Models.Task>();
 }
 
 <div class="container mt-4">
 	<h2>Create Task</h2>
-	<form method="post">
-		<!-- Task Title -->
+	<form method="post" id="TaskForm" asp-page-handler="CreateTask">
 		<div class="mb-3">
 			<label for="taskTitle" class="form-label">Task Title</label>
 			<input type="text" class="form-control" id="taskTitle" name="TaskTitle" required>
 		</div>
 
-		<!-- Task Description -->
 		<div class="mb-3">
 			<label for="taskDescription" class="form-label">Task Description</label>
 			<textarea class="form-control" id="taskDescription" name="TaskDescription" rows="3"></textarea>
 		</div>
 
-		<!-- Task Deadline -->
 		<div class="mb-3">
 			<label for="taskDeadline" class="form-label">Task Deadline</label>
 			<input type="datetime-local" class="form-control" id="taskDeadline" name="TaskDeadline" required>
 		</div>
 
-		<button type="submit" class="btn btn-primary">Create Task</button>
+		<button type="submit" class="btn btn-primary" id="CreateTask">Create Task</button>
 	</form>
 </div>
