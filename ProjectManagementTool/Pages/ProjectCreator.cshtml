@@ -12,6 +12,7 @@
 	GoalRepository goalRepository = new GoalRepository();
 	ProjectRepository projectRepository = new ProjectRepository();
 	EmployeeRepository employeeRepository = new EmployeeRepository();
+	List<Task> tasks = new List<Task>();
 }
 
 <head>
@@ -64,83 +65,35 @@
 		</nav>
 	</div>
 
-	<div class="container-fluid p-2" style="height: 80%">
-		<div class="d-flex flex-row h-100 gap-2">
-			<div class="d-flex flex-column w-25 gap-2">
-				<div class="h-50 border p-2 gap-2" id="tasks">
-					@{
-						if (Guid.TryParse(HttpContext.Session.GetString("UserId"), out Guid tUserId))
-						{
-							await Html.PartialAsync("Shared/TasksView", new TasksViewModel
-							{
-								tasks = taskRepository.GetEmployeeTasks(tUserId).ToList()
-							});
-						}
-						else
-						{
-							Console.WriteLine("Error GUID format failed");
-						}
-					}
-				</div>
-				<div class="h-50 border p-2 gap-2" id="deadlines"> Have another long hard think about what to put here. Originally destined for deadlines however that turned out to be a bad idea since those are displayed below projects.  </div>
-			</div>
-			<div class="d-flex flex-column w-75 gap-2">
-			<div class="h-25 border p-2 gap-2" id="Goal"> 
-			@await Html.PartialAsync("Shared/GoalView", new Goal
-					{
-						guid = Guid.NewGuid(),
-						completionPercentage = 15,
-						projectGuid = Guid.NewGuid(),
-						tasks = new List<Task>
-						{
-							new Task
-							{
-								deadline = DateTime.Now,
-								description = "This is a dummy description used for testing, please let me know if you see this after the testing phase since you shouldn't be seeing this.",
-								isNew = true,
-								title = "Task #1",
-								guid = Guid.NewGuid()
+	<div class="container mt-4">
+    <h2>Create Project</h2>
+    <form method="post">
+	    <div class="mb-3">
+            <label for="projectTitle" class="form-label">Project Title</label>
+            <input type="text" class="form-control" id="projectTitle" name="ProjectTitle" required>
+        </div>
 
-							},
-							new Task
-							{
-								deadline = DateTime.Now,
-								description = "This is a dummy description used for testing, please let me know if you see this after the testing phase since you shouldn't be seeing this.",
-								isNew = true,
-								title = "Task #2",
-								guid = Guid.NewGuid()
+        <div class="mb-3">
+            <label for="projectDescription" class="form-label">Project Description</label>
+            <textarea class="form-control" id="projectDescription" name="ProjectDescription" rows="3"></textarea>
+        </div>
 
-							}
-						} // !TODO Add functionality so this part can be rendered based on GUID retrieved by project currently selected
-					})
-			</div>
-				<div class="h-75 border p-2 gap-2" id="projects">
-					@{
-						if (Guid.TryParse(HttpContext.Session.GetString("UserId"), out Guid pUserId))
-						{
-							Console.WriteLine("Error?");
-							await Html.PartialAsync("Shared/ProjectsView", new Projects{ projects = 
-								projectRepository.GetEmployeeProjects(pUserId).ToList()
-									}
-							);
-						}
-						else
-						{
-							await Html.PartialAsync("Shared/ProjectsView", new Projects
-							{
-								projects = null
-							});
-						}
-					}
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="mb-3 border">
+	    @await Html.PartialAsync("Shared/TaskCreator")
+    </div>
+        
 
-	<div class="border align-content-center" style="height: 10%">
-		<h3>@HttpContext.Session.GetString("UserId")	</h3>
-	</div>
+        <div class="mb-3">
+            <h4>Assignees</h4>
+	        <div class="mb-2">
+                <label for="assigneeID" class="form-label">Assignee ID</label>
+                <input type="text" class="form-control" id="assigneeID" name="AssigneeID">
+            </div>
+        </div>
 
+        <button type="submit" class="btn btn-primary">Create Project</button>
+    </form>
+</div>
 </div>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>

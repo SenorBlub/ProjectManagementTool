@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using MySqlConnector;
+﻿using MySqlConnector;
 using ProjectManagementTool.Models;
 
 namespace ProjectManagementTool.DAL.Repositories;

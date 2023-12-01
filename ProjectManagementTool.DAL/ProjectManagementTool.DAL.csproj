@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ProjectManagementTool\ProjectManagementTool.csproj" />
+    <ProjectReference Include="..\ProjectManagementTool.DTOs\ProjectManagementTool.DTOs.csproj" />
   </ItemGroup>
 
 </Project>

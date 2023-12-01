@@ -30,4 +30,9 @@
     <UpToDateCheckInput Remove="Pages\Shared\TasksPopoutView.cshtml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ProjectManagementTool.DAL\ProjectManagementTool.DAL.csproj" />
+    <ProjectReference Include="..\ProjectManagementTool.DTOs\ProjectManagementTool.DTOs.csproj" />
+  </ItemGroup>
+
 </Project>

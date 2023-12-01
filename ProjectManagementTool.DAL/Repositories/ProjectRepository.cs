@@ -1,7 +1,5 @@
-﻿using System.ComponentModel;
-using MySqlConnector;
+﻿using MySqlConnector;
 using ProjectManagementTool.Models;
-using ProjectManagementTool.Models.NonBasicModels;
 
 namespace ProjectManagementTool.DAL.Repositories;
 
@@ -62,6 +60,35 @@ public class ProjectRepository
                     tasks = (new TaskRepository()).GetProjectTasks((Guid)reader["guid"]).ToList(),
                     assignees = (new EmployeeRepository()).GetProjectEmployees((Guid)reader["guid"]).ToList()
                      });
+        }
+
+        _connection.Close();
+        return projects;
+    }
+
+    // GetEmployeeProjects to get all projects associated with a single employee
+    public IEnumerable<Project> GetEmployeeProjects(Guid id)
+    {
+        List<Project> projects = new List<Project>();
+        _connection.Open();
+        string query = "SELECT * FROM EmployeeProject RIGHT JOIN Project ON EmployeeProject.projectGuid = Project.guid WHERE employeeGuid = @id";
+        using MySqlCommand command = new MySqlCommand(query, _connection);
+        command.Parameters.AddWithValue("@id", id);
+        using MySqlDataReader reader = command.ExecuteReader();
+
+        while (reader.Read())
+        {
+            projects.Add(
+                new Project
+                {
+                    guid = (Guid)reader["guid"],
+                    description = reader["description"].ToString(),
+                    title = reader["title"].ToString(),
+                    isNew = (bool)reader["isNew"],
+                    goal = (new GoalRepository().GetGoal((Guid)reader["guid"])),
+                    tasks = (new TaskRepository()).GetProjectTasks((Guid)reader["guid"]).ToList(),
+                    assignees = (new EmployeeRepository()).GetProjectEmployees((Guid)reader["guid"]).ToList()
+                });
         }
 
         _connection.Close();

@@ -1,5 +1,6 @@
 ﻿@page
 @using ProjectManagementTool.Models
+@using ProjectManagementTool.Models.NonBasicModels
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -33,8 +34,12 @@
 
 
 	<form method="post">
-		<button type="submit" asp-page="/MainOverview">Go to Target Page</button>
+		<button type="submit" asp-page="/Login">Go to Target Page</button>
 	</form>
+	
+	<div class="container-sm h-25 w-100">
+		<a class="btn btn-secondary" asp-page="/ProjectCreator">Create Project</a>
+	</div>
 
 	
 </div>
@@ -44,7 +49,6 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 
 <script>
-    // JavaScript to handle button click and show the toast
     document.getElementById('liveToastBtn').addEventListener('click', function () {
         var toastElement = document.getElementById('liveToast');
         var toast = new bootstrap.Toast(toastElement);

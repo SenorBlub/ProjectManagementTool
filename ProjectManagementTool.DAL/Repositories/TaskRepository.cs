@@ -74,9 +74,9 @@ namespace ProjectManagementTool.DAL.Repositories
         public IEnumerable<Models.Task> GetEmployeeTasks(Guid id)
         {
             _connection.Open();
-            string query = "SELECT * FROM Task";
+            string query = "SELECT Task.* FROM Task JOIN TaskProject ON Task.guid = TaskProject.taskGuid JOIN Project ON TaskProject.projectGuid = Project.guid JOIN EmployeeProject ON Project.guid = EmployeeProject.projectGuid JOIN Employee ON EmployeeProject.employeeGuid = Employee.guid WHERE Employee.guid = @id;";
             MySqlCommand command = new MySqlCommand(query, _connection);
-
+            command.Parameters.AddWithValue("@id", id);
             using MySqlDataReader reader = command.ExecuteReader();
 
             List<Models.Task> tasks = new List<Models.Task>();
@@ -101,7 +101,7 @@ namespace ProjectManagementTool.DAL.Repositories
         public IEnumerable<Models.Task> GetProjectTasks(Guid id)
         {
             _connection.Open();
-            string query = "SELECT * FROM TaskProject WHERE projectGuid = @id RIGHT JOIN Task ON TaskProject.taskGuid = Task.Guid";
+            string query = "SELECT * FROM TaskProject RIGHT JOIN Task ON TaskProject.taskGuid = Task.Guid WHERE projectGuid = @id";
             MySqlCommand command = new MySqlCommand(query, _connection);
             command.Parameters.AddWithValue("@id", id);
             using MySqlDataReader reader = command.ExecuteReader();
@@ -127,7 +127,7 @@ namespace ProjectManagementTool.DAL.Repositories
         public IEnumerable<Models.Task> GetGoalTasks(Guid id)
         {
             _connection.Open();
-            string query = "SELECT * FROM GoalTask WHERE goalGuid = @id RIGHT JOIN Task ON GoalTask.taskGuid = Task.Guid";
+            string query = "SELECT * FROM GoalTask RIGHT JOIN Task ON GoalTask.taskGuid = Task.Guid WHERE goalGuid = @id";
             MySqlCommand command = new MySqlCommand(query, _connection);
             command.Parameters.AddWithValue("@id", id);
             using MySqlDataReader reader = command.ExecuteReader();
