@@ -71,17 +71,19 @@
 					@{
 						if (Guid.TryParse(HttpContext.Session.GetString("UserId"), out Guid tUserId))
 						{
-							await Html.PartialAsync("Shared/TasksView", new TasksViewModel
+							var tasksViewModel = new TasksViewModel
 							{
 								tasks = taskRepository.GetEmployeeTasks(tUserId).ToList()
-							});
+							};
+							@(await Html.PartialAsync("Shared/TasksView", tasksViewModel))
 						}
 						else
 						{
-							Console.WriteLine("Error GUID format failed");
+							<p>Error: Unable to parse UserId</p>
 						}
 					}
 				</div>
+
 				<div class="h-50 border p-2 gap-2" id="deadlines"> Have another long hard think about what to put here. Originally destined for deadlines however that turned out to be a bad idea since those are displayed below projects.  </div>
 			</div>
 			<div class="d-flex flex-column w-75 gap-2">
@@ -118,18 +120,19 @@
 					@{
 						if (Guid.TryParse(HttpContext.Session.GetString("UserId"), out Guid pUserId))
 						{
-							Console.WriteLine("Error?");
-							await Html.PartialAsync("Shared/ProjectsView", new Projects{ projects = 
-								projectRepository.GetEmployeeProjects(pUserId).ToList()
-									}
-							);
+							var projectsViewModel = new Projects
+							{
+								projects = projectRepository.GetEmployeeProjects(pUserId).ToList()
+							};
+							@(await Html.PartialAsync("Shared/ProjectsView", projectsViewModel))
 						}
 						else
 						{
-							await Html.PartialAsync("Shared/ProjectsView", new Projects
+							var projectsViewModel = new Projects
 							{
 								projects = null
-							});
+							};
+							@(await Html.PartialAsync("Shared/ProjectsView", projectsViewModel))
 						}
 					}
 				</div>
@@ -146,5 +149,16 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
+<script>
+    $(document).ready(function () {
+        $('#projectsAccordion').on('show.bs.collapse', function (e) {
+            $(this).find('.collapse.show').collapse('hide');
+        });
+        $('#tasksAccordion').on('show.bs.collapse', function (e) {
+            $(this).find('.collapse.show').collapse('hide');
+        });
+    });
+</script>
+
 
 </body>

@@ -111,24 +111,6 @@ public class ProjectRepository
 
         command.ExecuteNonQuery();
 
-        foreach (Models.Task task in project.tasks)
-        {
-            MySqlCommand taskCommand = new MySqlCommand("INSERT INTO TaskProject (projectGuid, taskGuid) VALUES (@projectId, @taskId)",
-                _connection);
-            taskCommand.Parameters.AddWithValue("@projectId", project.guid);
-            taskCommand.Parameters.AddWithValue("@taskId", task.guid);
-            taskCommand.ExecuteNonQuery();
-        }
-
-        foreach (Models.Employee employee in project.assignees)
-        {
-            MySqlCommand taskCommand = new MySqlCommand("INSERT INTO EmployeeProject (projectGuid, employeeGuid) VALUES (@projectId, @employeeId)",
-                _connection);
-            taskCommand.Parameters.AddWithValue("@projectId", project.guid);
-            taskCommand.Parameters.AddWithValue("@employeeId", employee.guid);
-            taskCommand.ExecuteNonQuery();
-        }
-
         _connection.Close();
     }
 

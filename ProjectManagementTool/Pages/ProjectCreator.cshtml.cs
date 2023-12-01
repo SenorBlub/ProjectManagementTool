@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ProjectManagementTool.Models.NonBasicModels;
 using System;
+using ProjectManagementTool.DAL.Repositories;
+using ProjectManagementTool.DAL.Repositories.LinkRepos;
+using ProjectManagementTool.Models;
+using Task = ProjectManagementTool.Models.Task;
 
 namespace ProjectManagementTool.Pages
 {
@@ -74,20 +78,49 @@ namespace ProjectManagementTool.Pages
         {
             projectCreationModel = HttpContext.Session.GetObject<ProjectCreationModel>("ProjectCreationModel") ?? new ProjectCreationModel();
             // Retrieve form values
-            var projectTitle = Request.Form["ProjectTitle"];
-            var projectDescription = Request.Form["ProjectDescription"];
+            string projectTitle = Request.Form["ProjectTitle"];
+            string projectDescription = Request.Form["ProjectDescription"];
 
             // Validate and create project
             if (!string.IsNullOrWhiteSpace(projectTitle))
             {
-                projectCreationModel.project.title = projectTitle;
-                projectCreationModel.project.description = projectDescription;
-                projectCreationModel.project.guid = new Guid();
-                projectCreationModel.project.isNew = true;
-                projectCreationModel.project.goal = null;
+                Project newProject = new Project
+                {
+                    title = projectTitle,
+                    description = projectDescription,
+                    guid = Guid.NewGuid(),
+                    isNew = true,
+                    goal = new Goal
+                    {
+                        completionPercentage = 0,
+                        guid = Guid.Empty,
+                        projectGuid = Guid.Empty
+                    }
 
-                // !TODO post project to the places its supposed to go
-                // !TODO if needed make new repos
+                };
+
+                projectCreationModel.project = newProject;
+
+                TaskRepository taskRepository = new TaskRepository();
+                foreach (Task task in projectCreationModel.Tasks)
+                {
+                    taskRepository.PostTask(task);
+                }
+                
+                ProjectRepository projectRepository = new ProjectRepository();
+                projectRepository.PostProject(projectCreationModel.project);
+
+                EmployeeProjectRepository employeeProjectRepository = new EmployeeProjectRepository();
+                foreach (Guid employee in projectCreationModel.employees)
+                {
+                    employeeProjectRepository.PostEmployeeProject(employee, projectCreationModel.project.guid);
+                }
+
+                TaskProjectRepository taskProjectRepository = new TaskProjectRepository();
+                foreach (Task task in projectCreationModel.Tasks)
+                {
+                    taskProjectRepository.PostTaskProject(task.guid, projectCreationModel.project.guid);
+                }
 
                 // Save ProjectCreationModel to session or database, depending on your needs
                 HttpContext.Session.SetObject("ProjectCreationModel", projectCreationModel);

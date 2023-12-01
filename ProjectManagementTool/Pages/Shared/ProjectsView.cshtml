@@ -1,16 +1,18 @@
-﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
-@model ProjectManagementTool.Models.NonBasicModels.Projects
+﻿@model ProjectManagementTool.Models.NonBasicModels.Projects
 
 <div class="container-fluid h-100 w-100 overflow-auto">
-	<h2>Projects View</h2>
-	@if (Model.projects != null)
-	{
-		<div class="accordion accordion-flush">
-			@foreach (Models.Project project in Model.projects)
+	<div class="accordion accordion-flush" id="projectsAccordion">
+		@if (Model.projects == null || !Model.projects.Any())
+		{
+			<div>Empty</div>
+		}
+		else
+		{
+			@foreach (var project in Model.projects)
 			{
-				<div class="accordion-item" id="accordion">
-					<h2 class="accordion-header">
-						<button class="accordion-button" id="button-@project.guid" type="button" data-bs-toggle="collapse" data-bs-target="#@project.guid" aria-expanded="false" aria-controls="@project.guid">
+				<div class="accordion-item" id="accordion-@project.guid">
+					<h2 class="accordion-header" id="heading-@project.guid">
+						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@project.guid" aria-expanded="false" aria-controls="collapse-@project.guid">
 							@project.title
 							@if (project.isNew)
 							{
@@ -19,20 +21,16 @@
 							}
 						</button>
 					</h2>
-					<div id="@project.guid" class="accordion-collapse collapse" data-bs-parent="#accordion">
+					<div id="collapse-@project.guid" class="accordion-collapse collapse" aria-labelledby="heading-@project.guid" data-bs-parent="#projectsAccordion">
 						<div class="accordion-body">
 							<p>
 								@project.description
 							</p>
-
 							<a class="btn btn-secondary" asp-page="/projectOverview" asp-route-id="@project.guid">View project</a>
 						</div>
 					</div>
 				</div>
 			}
-		</div>
-	}
-	<form class="container-sm h-25 w-100">
-		<a class="btn btn-secondary" asp-page="/ProjectCreator">Create Project</a>
-	</form>
+		}
+	</div>
 </div>
