@@ -66,11 +66,10 @@ namespace ProjectManagementTool.DAL.Repositories
             }
 
             _connection.Close();
-            return tasks; // Return null if the task with the specified ID is not found
+            return tasks;
         }
 
         // GetEmployeeTasks to get all tasks that are associated with a single employee by ID
-        // THIS METHOD NEEDS FUNCTIONALITY TOO BE ADDED STILL CURRENTLY CARBON COPY OF THE METHOD ABOVE
         public IEnumerable<Models.Task> GetEmployeeTasks(Guid id)
         {
             _connection.Open();
