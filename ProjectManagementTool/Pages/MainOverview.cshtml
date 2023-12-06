@@ -69,20 +69,29 @@
 			<div class="d-flex flex-column w-25 gap-2">
 				<div class="h-50 border p-2 gap-2" id="tasks">
 					@{
-						if (Guid.TryParse(HttpContext.Session.GetString("UserId"), out Guid tUserId))
+						try
 						{
-							var tasksViewModel = new TasksViewModel
+							if (Guid.TryParse(HttpContext.Session.GetString("UserId"), out Guid tUserId))
 							{
-								tasks = taskRepository.GetEmployeeTasks(tUserId).ToList()
-							};
-							@(await Html.PartialAsync("Shared/TasksView", tasksViewModel))
+								var tasksViewModel = new TasksViewModel
+								{
+									tasks = taskRepository.GetEmployeeTasks(tUserId).ToList()
+								};
+
+								<div class="container-fluid">@await Html.PartialAsync("Shared/TasksView", tasksViewModel)</div>
+							}
+							else
+							{
+								<p>Error: Unable to parse UserId</p>
+							}
 						}
-						else
+						catch (Exception ex)
 						{
-							<p>Error: Unable to parse UserId</p>
+							<p>Error: @ex.Message</p>
 						}
 					}
 				</div>
+
 
 				<div class="h-50 border p-2 gap-2" id="deadlines"> Have another long hard think about what to put here. Originally destined for deadlines however that turned out to be a bad idea since those are displayed below projects.  </div>
 			</div>
@@ -118,24 +127,34 @@
 			</div>
 				<div class="h-75 border p-2 gap-2" id="projects">
 					@{
-						if (Guid.TryParse(HttpContext.Session.GetString("UserId"), out Guid pUserId))
+						try
 						{
-							var projectsViewModel = new Projects
+							if (Guid.TryParse(HttpContext.Session.GetString("UserId"), out Guid pUserId))
 							{
-								projects = projectRepository.GetEmployeeProjects(pUserId).ToList()
-							};
-							@(await Html.PartialAsync("Shared/ProjectsView", projectsViewModel))
+								var projectsViewModel = new Projects
+								{
+									projects = projectRepository.GetEmployeeProjects(pUserId).ToList()
+								};
+
+								<div class="container-fluid">@await Html.PartialAsync("Shared/ProjectsView", projectsViewModel)</div>
+							}
+							else
+							{
+								var projectsViewModel = new Projects
+								{
+									projects = null
+								};
+
+								<div class="container-fluid">@await Html.PartialAsync("Shared/ProjectsView", projectsViewModel)</div>
+							}
 						}
-						else
+						catch (Exception ex)
 						{
-							var projectsViewModel = new Projects
-							{
-								projects = null
-							};
-							@(await Html.PartialAsync("Shared/ProjectsView", projectsViewModel))
+							<p>Error: @ex.Message</p>
 						}
 					}
 				</div>
+
 			</div>
 		</div>
 	</div>
@@ -149,16 +168,5 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
-<script>
-    $(document).ready(function () {
-        $('#projectsAccordion').on('show.bs.collapse', function (e) {
-            $(this).find('.collapse.show').collapse('hide');
-        });
-        $('#tasksAccordion').on('show.bs.collapse', function (e) {
-            $(this).find('.collapse.show').collapse('hide');
-        });
-    });
-</script>
-
 
 </body>

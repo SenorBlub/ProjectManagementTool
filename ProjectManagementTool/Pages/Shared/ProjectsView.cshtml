@@ -1,7 +1,7 @@
 ﻿@model ProjectManagementTool.Models.NonBasicModels.Projects
 
 <div class="container-fluid h-100 w-100 overflow-auto">
-	<div class="accordion accordion-flush" id="projectsAccordion">
+	<div class="accordion-flush" id="projectsAccordion">
 		@if (Model.projects == null || !Model.projects.Any())
 		{
 			<div>Empty</div>
@@ -12,7 +12,7 @@
 			{
 				<div class="accordion-item" id="accordion-@project.guid">
 					<h2 class="accordion-header" id="heading-@project.guid">
-						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@project.guid" aria-expanded="false" aria-controls="collapse-@project.guid">
+						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@project.guid" aria-expanded="false" aria-controls="collapse-@project.guid">
 							@project.title
 							@if (project.isNew)
 							{
