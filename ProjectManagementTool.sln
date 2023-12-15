@@ -8,12 +8,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManagementTool", "Pr
 		{23B57DDA-0732-4597-8942-7A0712DD9B9B} = {23B57DDA-0732-4597-8942-7A0712DD9B9B}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManagementTool.DTOs", "ProjectManagementTool.DTOs\ProjectManagementTool.DTOs.csproj", "{23B57DDA-0732-4597-8942-7A0712DD9B9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManagementTool.Logic", "ProjectManagementTool.DTOs\ProjectManagementTool.Logic.csproj", "{23B57DDA-0732-4597-8942-7A0712DD9B9B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManagementTool.DAL", "ProjectManagementTool.DAL\ProjectManagementTool.DAL.csproj", "{E154D3A2-9592-4DB9-A60E-59B16807A55B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{23B57DDA-0732-4597-8942-7A0712DD9B9B} = {23B57DDA-0732-4597-8942-7A0712DD9B9B}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject2", "UnitTestProject2\UnitTestProject2.csproj", "{A0911802-004D-4513-BA54-8685867CA95B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{E154D3A2-9592-4DB9-A60E-59B16807A55B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E154D3A2-9592-4DB9-A60E-59B16807A55B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E154D3A2-9592-4DB9-A60E-59B16807A55B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0911802-004D-4513-BA54-8685867CA95B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0911802-004D-4513-BA54-8685867CA95B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0911802-004D-4513-BA54-8685867CA95B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0911802-004D-4513-BA54-8685867CA95B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

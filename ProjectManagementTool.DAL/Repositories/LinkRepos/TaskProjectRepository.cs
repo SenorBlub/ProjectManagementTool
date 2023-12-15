@@ -1,9 +1,10 @@
 ﻿using MySqlConnector;
+using ProjectManagementTool.Logic.Interfaces.IRepositories.ILinkRepositories;
 using ProjectManagementTool.Models;
 
 namespace ProjectManagementTool.DAL.Repositories
 {
-    public class TaskProjectRepository
+    public class TaskProjectRepository : ITaskProjectRepository
     {
         readonly MySqlConnection _connection;
 

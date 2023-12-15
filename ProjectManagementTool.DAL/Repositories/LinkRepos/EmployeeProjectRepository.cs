@@ -1,9 +1,10 @@
 ﻿using MySqlConnector;
+using ProjectManagementTool.Logic.Interfaces.IRepositories.ILinkRepositories;
 using ProjectManagementTool.Models;
 
 namespace ProjectManagementTool.DAL.Repositories.LinkRepos
 {
-    public class EmployeeProjectRepository
+    public class EmployeeProjectRepository : IEmployeeProjectRepository
     {
         readonly MySqlConnection _connection;
 

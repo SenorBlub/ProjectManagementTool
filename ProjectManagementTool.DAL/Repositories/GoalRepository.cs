@@ -1,11 +1,13 @@
 ﻿using System.Net;
 using MySqlConnector;
+using ProjectManagementTool.Logic.Interfaces.IModels;
+using ProjectManagementTool.Logic.Interfaces.IRepositories;
 using ProjectManagementTool.Models;
 using Task = ProjectManagementTool.Models.Task;
 
 namespace ProjectManagementTool.DAL.Repositories;
 
-public class GoalRepository
+public class GoalRepository : IGoalRepository
 {
     readonly MySqlConnection _connection;
 
@@ -17,9 +19,9 @@ public class GoalRepository
     }
 
     // GetGoal to get a single goal by ID
-    public Models.Goal GetGoal(Guid id)
+    public IGoal GetGoal(Guid id)
     {
-        Models.Goal goal = new Models.Goal();
+        IGoal goal = new Models.Goal();
         _connection.Open();
         string query = "SELECT * FROM Goal WHERE guid = @id";
         using MySqlCommand command = new MySqlCommand(query, _connection);
@@ -38,9 +40,9 @@ public class GoalRepository
     }
 
     // GetGoals to get all goals
-    public IEnumerable<Models.Goal> GetGoals()
+    public IEnumerable<IGoal> GetGoals()
     {
-        List<Models.Goal> goals = new List<Models.Goal>();
+        List<IGoal> goals = new List<IGoal>();
         _connection.Open();
         string query = "SELECT * FROM Goal";
         using MySqlCommand command = new MySqlCommand(query, _connection);
@@ -59,7 +61,7 @@ public class GoalRepository
     }
 
     // PostGoal to add a goal
-    public void PostGoal(Goal goal)
+    public void PostGoal(IGoal goal)
     {
         _connection.Open();
 
@@ -71,7 +73,7 @@ public class GoalRepository
 
         command.ExecuteNonQuery();
 
-        foreach (Models.Task task in goal.tasks)
+        foreach (ITask task in goal.tasks)
         {
             MySqlCommand taskCommand = new MySqlCommand("INSERT INTO GoalTask (goalGuid, taskGuid) VALUES (@goalId, @taskId)",
                 _connection);
@@ -83,7 +85,7 @@ public class GoalRepository
         _connection.Close();
     }
     // UpdateGoal to change a goal
-    public void UpdateGoal(Goal goal, Guid id)
+    public void UpdateGoal(IGoal goal, Guid id)
     {
         _connection.Open();
 
@@ -95,7 +97,7 @@ public class GoalRepository
 
         command.ExecuteNonQuery();
 
-        foreach (Models.Task task in goal.tasks)
+        foreach (ITask task in goal.tasks)
         {
             MySqlCommand taskCommand = new MySqlCommand("UPDATE GoalTask SET taskGuid = @taskId WHERE goalGuid = @goalId",
                 _connection);

@@ -1,8 +1,6 @@
-﻿using ProjectManagementTool.Logic.Interfaces.IModels;
+﻿namespace ProjectManagementTool.Logic.Interfaces.IModels;
 
-namespace ProjectManagementTool.Models;
-
-public class Task : ITask
+public interface ITask
 {
     public Guid guid { get; set; }
 
@@ -13,4 +11,5 @@ public class Task : ITask
     public DateTime deadline { get; set; }
 
     public bool isNew { get; set; }
+}
 }

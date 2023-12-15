@@ -1,9 +1,12 @@
 ﻿using MySqlConnector;
+using ProjectManagementTool.Logic.Interfaces.IRepositories.ILinkRepositories;
+using ProjectManagementTool.Logic.Interfaces.IModels;
+using ProjectManagementTool.Logic.Interfaces.IRepositories;
 using ProjectManagementTool.Models;
 
 namespace ProjectManagementTool.DAL.Repositories;
 
-public class EmployeeRepository
+public class EmployeeRepository : IEmployeeRepository
 {
     readonly MySqlConnection _connection;
 
@@ -14,9 +17,9 @@ public class EmployeeRepository
                 "Server=host.docker.internal;port=3312;Database=Project-Tool-Database;User=root;Password=password123;");
     }
     // GetEmployee to get a single employee by ID
-    public Models.Employee GetEmployee(Guid id)
+    public IEmployee GetEmployee(Guid id)
     {
-        Models.Employee employee = new Models.Employee();
+        IEmployee employee = new Employee();
         _connection.Open();
         string query = "SELECT * FROM Employee WHERE guid = @id";
         using MySqlCommand command = new MySqlCommand(query, _connection);
@@ -34,9 +37,9 @@ public class EmployeeRepository
         return employee;
     }
     // GetEmployees to get all employees
-    public List<Models.Employee> GetEmployees()
+    public List<IEmployee> GetEmployees()
     {
-        List<Models.Employee> employees = new List<Models.Employee>();
+        List<IEmployee> employees = new List<IEmployee>();
         _connection.Open();
         string query = "SELECT * FROM Employee";
         using MySqlCommand command = new MySqlCommand(query, _connection);
@@ -56,12 +59,12 @@ public class EmployeeRepository
     }
 
     // GetEmployees to get all employees
-    public List<Models.Employee> GetProjectEmployees(Guid id)
+    public List<IEmployee> GetProjectEmployees(Guid id)
     {
-        List<Models.Employee> employees = new List<Models.Employee>();
+        List<IEmployee> employees = new List<IEmployee>();
         _connection.Open();
-        string query = "SELECT * FROM EmployeeProject RIGHT JOIN Employee ON EmployeeProject.employeeGuid = Employee.guid WHERE projectGuid = @id";
-        using MySqlCommand command = new MySqlCommand(query, _connection);
+        string query = "SELECT * FROM EmployeeProject RIGHT JOIN Employee ON EmployeeProject.employeeGuid = Employee.guid WHERE projectGuid = @id"; // !TODO Clarity of definition
+        using MySqlCommand command = new MySqlCommand(query, _connection); // !TODO only fetch relevant data (performance)
         command.Parameters.AddWithValue("@id", id);
 
         using MySqlDataReader reader = command.ExecuteReader();
@@ -80,7 +83,7 @@ public class EmployeeRepository
     }
 
     // PostEmployee to add an employee
-    public void PostEmployee(Employee employee)
+    public void PostEmployee(IEmployee employee)
     {
         _connection.Open();
         string query = "INSERT INTO Employee (guid, name, email) VALUES (@id, @name, @email)";
@@ -95,7 +98,7 @@ public class EmployeeRepository
     }
 
     // UpdateEmployee to edit a single employee by ID
-    public void UpdateEmployee(Employee employee, Guid id)
+    public void UpdateEmployee(IEmployee employee, Guid id)
     {
         _connection.Open();
         string query = "Update Employee SET guid = @id, name =  @name, email = @email";

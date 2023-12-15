@@ -1,4 +1,5 @@
 ﻿using MySqlConnector;
+using ProjectManagementTool.Logic.Interfaces.IModels;
 using ProjectManagementTool.Models;
 
 namespace ProjectManagementTool.DAL.Repositories;
@@ -14,9 +15,9 @@ public class ProjectRepository
                 "Server=host.docker.internal;port=3312;Database=Project-Tool-Database;User=root;Password=password123;");
     }
     // GetProject to display project by ID
-    public Project GetProject(Guid id)
+    public IProject GetProject(Guid id)
     {
-        Project project = new Project();
+        IProject project = new Models.Project();
         _connection.Open();
         string query = "SELECT * FROM Project WHERE ID = @id";
         using MySqlCommand command = new MySqlCommand(query, _connection);
@@ -39,9 +40,9 @@ public class ProjectRepository
     }
 
     // GetProjects to display all projects
-    public IEnumerable<Project> GetProjects()
+    public IEnumerable<IProject> GetProjects()
     {
-        List<Project> projects = new List<Project>();
+        List<IProject> projects = new List<IProject>();
         _connection.Open();
         string query = "SELECT * FROM Project";
         using MySqlCommand command = new MySqlCommand(query, _connection);
@@ -50,7 +51,7 @@ public class ProjectRepository
         while (reader.Read())
         {
             projects.Add(
-                new Project
+                new Models.Project
                      {
                     guid = (Guid)reader["guid"],
                     description = reader["description"].ToString(),
@@ -67,9 +68,9 @@ public class ProjectRepository
     }
 
     // GetEmployeeProjects to get all projects associated with a single employee
-    public IEnumerable<Project> GetEmployeeProjects(Guid id)
+    public IEnumerable<IProject> GetEmployeeProjects(Guid id)
     {
-        List<Project> projects = new List<Project>();
+        List<IProject> projects = new List<IProject>();
         _connection.Open();
         string query = "SELECT * FROM EmployeeProject RIGHT JOIN Project ON EmployeeProject.projectGuid = Project.guid WHERE employeeGuid = @id";
         using MySqlCommand command = new MySqlCommand(query, _connection);
@@ -79,7 +80,7 @@ public class ProjectRepository
         while (reader.Read())
         {
             projects.Add(
-                new Project
+                new Models.Project
                 {
                     guid = (Guid)reader["guid"],
                     description = reader["description"].ToString(),
@@ -96,7 +97,7 @@ public class ProjectRepository
     }
 
     // PostProject to create a project
-    public void PostProject(Project project)
+    public void PostProject(IProject project)
     {
         _connection.Open();
 
@@ -115,7 +116,7 @@ public class ProjectRepository
     }
 
     // UpdateProject to change any values associated with a project
-    public void UpdateProject(Project project, Guid id)
+    public void UpdateProject(IProject project, Guid id)
     {
         _connection.Open();
 
@@ -130,7 +131,7 @@ public class ProjectRepository
 
         command.ExecuteNonQuery();
 
-        foreach (Models.Task task in project.tasks)
+        foreach (ITask task in project.tasks)
         {
             MySqlCommand taskCommand = new MySqlCommand("UPDATE TaskProject ON taskGuid = @taskId WHERE projectGuid = @projectId",
                 _connection);
@@ -139,7 +140,7 @@ public class ProjectRepository
             taskCommand.ExecuteNonQuery();
         }
 
-        foreach (Models.Employee employee in project.assignees)
+        foreach (IEmployee employee in project.assignees)
         {
             MySqlCommand taskCommand = new MySqlCommand("UPDATE EmployeeProject ON employeeGuid = @employeeId WHERE projectGuid = @projectId",
                 _connection);

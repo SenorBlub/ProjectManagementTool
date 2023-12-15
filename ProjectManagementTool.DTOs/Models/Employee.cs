@@ -1,6 +1,8 @@
-﻿namespace ProjectManagementTool.Models;
+﻿using ProjectManagementTool.Logic.Interfaces.IModels;
 
-public class Employee
+namespace ProjectManagementTool.Models;
+
+public class Employee : IEmployee
 {
     public Guid guid { get; set; }
     public string name { get; set; }

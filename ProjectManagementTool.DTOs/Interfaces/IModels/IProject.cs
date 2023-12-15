@@ -1,8 +1,6 @@
-﻿using ProjectManagementTool.Logic.Interfaces.IModels;
+﻿namespace ProjectManagementTool.Logic.Interfaces.IModels;
 
-namespace ProjectManagementTool.Models;
-
-public class Project : IProject
+public interface IProject
 {
     public Guid guid { get; set; }
 

@@ -1,11 +1,13 @@
 ﻿using MySqlConnector;
 using System;
 using System.Security.Cryptography.X509Certificates;
-using Task = ProjectManagementTool.Models.Task;
+using ProjectManagementTool.Logic.Interfaces.IModels;
+using ProjectManagementTool.Logic.Interfaces.IRepositories;
+using ProjectManagementTool.Models;
 
 namespace ProjectManagementTool.DAL.Repositories
 {
-    public class TaskRepository
+    public class TaskRepository : ITaskRepository
     {
         readonly MySqlConnection _connection;
 
@@ -17,9 +19,9 @@ namespace ProjectManagementTool.DAL.Repositories
         }
 
         // GetTask to get a task by ID
-        public Models.Task GetTask(Guid id)
+        public ITask GetTask(Guid id)
         {
-            Models.Task task = new Task();
+            ITask task = new Models.Task();
             _connection.Open();
             string query = "SELECT * FROM Task WHERE guid = @taskId";
             MySqlCommand command = new MySqlCommand(query, _connection);
@@ -29,7 +31,7 @@ namespace ProjectManagementTool.DAL.Repositories
 
             while (reader.Read())
             {
-                task = new Task
+                task = new Models.Task
                 {
                     guid = (Guid)reader["guid"],
                     description = reader["description"].ToString(),
@@ -43,7 +45,7 @@ namespace ProjectManagementTool.DAL.Repositories
         }
 
         // GetAllTasks to get all tasks
-        public IEnumerable<Models.Task> GetTasks()
+        public IEnumerable<ITask> GetTasks()
         {
             _connection.Open();
             string query = "SELECT * FROM Task";
@@ -51,7 +53,7 @@ namespace ProjectManagementTool.DAL.Repositories
 
             using MySqlDataReader reader = command.ExecuteReader();
 
-            List<Models.Task> tasks = new List<Models.Task>();
+            List<ITask> tasks = new List<ITask>();
 
             while (reader.Read())
             {
@@ -70,7 +72,7 @@ namespace ProjectManagementTool.DAL.Repositories
         }
 
         // GetEmployeeTasks to get all tasks that are associated with a single employee by ID
-        public IEnumerable<Models.Task> GetEmployeeTasks(Guid id)
+        public IEnumerable<ITask> GetEmployeeTasks(Guid id)
         {
             _connection.Open();
             string query = "SELECT Task.* FROM Task JOIN TaskProject ON Task.guid = TaskProject.taskGuid JOIN Project ON TaskProject.projectGuid = Project.guid JOIN EmployeeProject ON Project.guid = EmployeeProject.projectGuid JOIN Employee ON EmployeeProject.employeeGuid = Employee.guid WHERE Employee.guid = @id;";
@@ -78,7 +80,7 @@ namespace ProjectManagementTool.DAL.Repositories
             command.Parameters.AddWithValue("@id", id);
             using MySqlDataReader reader = command.ExecuteReader();
 
-            List<Models.Task> tasks = new List<Models.Task>();
+            List<ITask> tasks = new List<ITask>();
 
             while (reader.Read())
             {
@@ -97,7 +99,7 @@ namespace ProjectManagementTool.DAL.Repositories
         }
 
         // GetProjectTasks to get all tasks that are associated with a single project by ID
-        public IEnumerable<Models.Task> GetProjectTasks(Guid id)
+        public IEnumerable<ITask> GetProjectTasks(Guid id)
         {
             _connection.Open();
             string query = "SELECT * FROM TaskProject RIGHT JOIN Task ON TaskProject.taskGuid = Task.Guid WHERE projectGuid = @id";
@@ -105,7 +107,7 @@ namespace ProjectManagementTool.DAL.Repositories
             command.Parameters.AddWithValue("@id", id);
             using MySqlDataReader reader = command.ExecuteReader();
 
-            List<Models.Task> tasks = new List<Models.Task>();
+            List<ITask> tasks = new List<ITask>();
 
             while (reader.Read())
             {
@@ -123,7 +125,7 @@ namespace ProjectManagementTool.DAL.Repositories
         }
 
         // get all tasks associated with a certain goal
-        public IEnumerable<Models.Task> GetGoalTasks(Guid id)
+        public IEnumerable<ITask> GetGoalTasks(Guid id)
         {
             _connection.Open();
             string query = "SELECT * FROM GoalTask RIGHT JOIN Task ON GoalTask.taskGuid = Task.Guid WHERE goalGuid = @id";
@@ -131,7 +133,7 @@ namespace ProjectManagementTool.DAL.Repositories
             command.Parameters.AddWithValue("@id", id);
             using MySqlDataReader reader = command.ExecuteReader();
 
-            List<Models.Task> tasks = new List<Models.Task>();
+            List<ITask> tasks = new List<ITask>();
 
             while (reader.Read())
             {
@@ -149,7 +151,7 @@ namespace ProjectManagementTool.DAL.Repositories
         }
 
         // PostTask to add a task
-        public void PostTask(Task task)
+        public void PostTask(ITask task)
         {
             _connection.Open();
             string query = "INSERT INTO Task (guid, description, title, deadline, isNew) VALUES (@id, @description, @title, @deadline, @isNew)";
@@ -165,7 +167,7 @@ namespace ProjectManagementTool.DAL.Repositories
             _connection.Close();
         }
         // UpdateTask to edit a single task by ID
-        public void UpdateTask(Task task, Guid id)
+        public void UpdateTask(ITask task, Guid id)
         {
             _connection.Open();
             string query =

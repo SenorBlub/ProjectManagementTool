@@ -5,6 +5,7 @@ using ProjectManagementTool.Models.NonBasicModels;
 using System;
 using ProjectManagementTool.DAL.Repositories;
 using ProjectManagementTool.DAL.Repositories.LinkRepos;
+using ProjectManagementTool.Logic.Services;
 using ProjectManagementTool.Models;
 using Task = ProjectManagementTool.Models.Task;
 
@@ -15,7 +16,7 @@ namespace ProjectManagementTool.Pages
         [BindProperty]
         public ProjectCreationModel projectCreationModel { get; set; } = new ProjectCreationModel();
 
-        public IActionResult OnPostCreateTask()
+        public IActionResult OnPostCreateTask() //TODO most of this code is logic code not view code so move it
         {
             projectCreationModel = HttpContext.Session.GetObject<ProjectCreationModel>("ProjectCreationModel") ?? new ProjectCreationModel();
             // Retrieve form values
@@ -24,7 +25,7 @@ namespace ProjectManagementTool.Pages
             var taskDeadline = Request.Form["TaskDeadline"];
 
             // Validate and create new task
-            if (!string.IsNullOrWhiteSpace(taskTitle) && DateTime.TryParse(taskDeadline, out var deadline))
+            if (!string.IsNullOrWhiteSpace(taskTitle) && DateTime.TryParse(taskDeadline, out var deadline)) // TODO put this in logic
             {
                 var newTask = new Models.Task
                 {
@@ -50,14 +51,14 @@ namespace ProjectManagementTool.Pages
             return RedirectToPage();
         }
 
-        public IActionResult OnPostAddAssignee()
+        public IActionResult OnPostAddAssignee() //TODO most of this code is logic code not view code so move it
         {
             projectCreationModel = HttpContext.Session.GetObject<ProjectCreationModel>("ProjectCreationModel") ?? new ProjectCreationModel();
 
             // Retrieve form values
             var employeeIdString = Request.Form["AssigneeID"];
 
-            if (Guid.TryParse(employeeIdString, out Guid employeeId))
+            if (Guid.TryParse(employeeIdString, out Guid employeeId)) // TODO put this in logic
             {
                 projectCreationModel.employees.Add(employeeId);
 
@@ -74,7 +75,7 @@ namespace ProjectManagementTool.Pages
             }
         }
 
-        public IActionResult OnPostProjectOnly()
+        public IActionResult OnPostProjectOnly() //TODO most of this code is logic code not view code so move it
         {
             projectCreationModel = HttpContext.Session.GetObject<ProjectCreationModel>("ProjectCreationModel") ?? new ProjectCreationModel();
             // Retrieve form values
@@ -82,7 +83,7 @@ namespace ProjectManagementTool.Pages
             string projectDescription = Request.Form["ProjectDescription"];
 
             // Validate and create project
-            if (!string.IsNullOrWhiteSpace(projectTitle))
+            if (!string.IsNullOrWhiteSpace(projectTitle)) // TODO put this in logic
             {
                 Project newProject = new Project
                 {
@@ -99,7 +100,7 @@ namespace ProjectManagementTool.Pages
 
                 };
 
-                projectCreationModel.project = newProject;
+                projectCreationModel.project = ProjectValidator.Validate(newProject);
 
                 TaskRepository taskRepository = new TaskRepository();
                 foreach (Task task in projectCreationModel.Tasks)

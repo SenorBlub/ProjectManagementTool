@@ -33,7 +33,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ProjectManagementTool.DAL\ProjectManagementTool.DAL.csproj" />
-    <ProjectReference Include="..\ProjectManagementTool.DTOs\ProjectManagementTool.DTOs.csproj" />
+    <ProjectReference Include="..\ProjectManagementTool.DTOs\ProjectManagementTool.Logic.csproj" />
   </ItemGroup>
 
   <ItemGroup>
