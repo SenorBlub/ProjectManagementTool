@@ -1,41 +1,107 @@
 ﻿using ProjectManagementTool.Logic.Interfaces.IRepositories;
 using ProjectManagementTool.Models;
+using System;
+using System.Collections.Generic;
+using ProjectManagementTool.Logic.Interfaces.IModels;
 using Task = ProjectManagementTool.Models.Task;
 
-namespace ProjectManagementTool.Logic.Logic;
-
-public class ProjectController
+namespace ProjectManagementTool.Logic.Logic
 {
-    private string nullTitle { get; set; } = string.Empty;
-    private string nullDescription { get; set; } = string.Empty;
-    private Guid nullGuid { get; set; } = Guid.Empty;
-    private List<Task> nullTasks { get; set; } = new List<Task>()
+    public class ProjectController
     {
+        private readonly string NullTitle = string.Empty;
+        private readonly string NullDescription = string.Empty;
+        private readonly Guid NullGuid = Guid.Empty;
+        private readonly List<ITask> NullTasks = new List<ITask>();
+        private readonly IGoal NullGoal = new Goal();
+        private readonly List<IEmployee> NullEmployees = new List<IEmployee>();
+        private readonly bool NullIsNew = false;
 
-    };
-    private Goal nullGoal { get; set; } = new Goal()
-    {
+        public void AddProject(IProjectRepository repository, bool isNew = false, string projectTitle = null,
+            string projectDescription = null, Guid guid = default, List<ITask> tasks = null, IGoal goal = null,
+            List<IEmployee> employees = null)
+        {
+            projectTitle ??= NullTitle;
+            projectDescription ??= NullDescription;
+            guid = guid == default ? NullGuid : guid;
+            tasks ??= NullTasks;
+            goal ??= NullGoal;
+            employees ??= NullEmployees;
+            isNew = isNew || NullIsNew;
 
-    };
+            Project newProject = new Project
+            {
+                title = projectTitle,
+                description = projectDescription,
+                guid = guid,
+                isNew = isNew,
+                tasks = tasks,
+                goal = goal,
+                assignees = employees
+            };
 
-    private List<Employee> nullEmployees { get; set; } = new List<Employee>()
-    {
+            repository.PostProject(newProject);
+        }
 
-    };
-    private bool nullIsNew { get; set; } = false;
-    public void AddProject(string projectTitle = null, string projectDescription = null, Guid guid = default, List<Task> tasks = null, Goal goal = null, List<Employee> employees = null, bool isNew = false)
-    {
-        projectTitle ??= nullTitle;
-        projectDescription ??= nullDescription;
-        guid = guid == default ? nullGuid : guid;
-        tasks ??= nullTasks;
-        goal ??= nullGoal;
-        employees ??= nullEmployees;
-        isNew = isNew || nullIsNew;
-    }
+        public void AddProject(IProject project, IProjectRepository repository)
+        {
 
-    public void AddProject(Project project)
-    {
+            repository.PostProject(project);
 
+        }
+
+        public void UpdateProject(IProjectRepository repository, Guid guid, bool isNew = false, string projectTitle = null,
+            string projectDescription = null, List<ITask> tasks = null, IGoal goal = null,
+            List<IEmployee> employees = null)
+        {
+            projectTitle ??= NullTitle;
+            projectDescription ??= NullDescription;
+            tasks ??= NullTasks;
+            goal ??= NullGoal;
+            employees ??= NullEmployees;
+            isNew = isNew || NullIsNew;
+
+            Project newProject = new Project
+            {
+                title = projectTitle,
+                description = projectDescription,
+                guid = guid,
+                isNew = isNew,
+                tasks = tasks,
+                goal = goal,
+                assignees = employees
+            };
+
+            repository.UpdateProject(newProject, newProject.guid);
+        }
+
+        public void UpdateProject(IProject project, IProjectRepository repository)
+        {
+
+            repository.UpdateProject(project, project.guid);
+
+        }
+
+        public void DeleteProject(Guid guid, IProjectRepository repository)
+        {
+            repository.DeleteProject(guid);
+        }
+
+        public List<IProject> GetProject(IProjectRepository repository)
+        {
+            
+
+            return repository.GetProjects().ToList();
+        }
+
+        public IProject GetProject(Guid guid, IProjectRepository repository)
+        {
+            return repository.GetProject(guid);
+        }
+
+        public List<IProject> GetEmployeeProjects(Guid employeeGuid, IProjectRepository repository)
+        {
+            return repository.GetEmployeeProjects(employeeGuid).ToList();
+        }
     }
 }

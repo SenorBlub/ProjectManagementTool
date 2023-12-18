@@ -19,14 +19,14 @@ public class GoalRepository : IGoalRepository
     }
 
     // GetGoal to get a single goal by ID
-    public IGoal GetGoal(Guid id)
+    public IGoal GetGoal(Guid goalId)
     {
         IGoal goal = new Models.Goal();
         _connection.Open();
-        string query = "SELECT * FROM Goal WHERE guid = @id";
+        string query = "SELECT * FROM Goal WHERE guid = @goalId";
         using MySqlCommand command = new MySqlCommand(query, _connection);
 
-        command.Parameters.AddWithValue("@id", id);
+        command.Parameters.AddWithValue("@goalId", goalId);
 
         MySqlDataReader reader = command.ExecuteReader();
 
@@ -34,7 +34,7 @@ public class GoalRepository : IGoalRepository
         {
             goal.guid = (Guid)reader["guid"];
             goal.completionPercentage = (int)reader["completionPercentage"];
-            goal.tasks = (new TaskRepository()).GetGoalTasks(id).ToList();
+            goal.tasks = (new TaskRepository()).GetGoalTasks(goalId).ToList();
         }
         return goal;
     }
@@ -65,10 +65,10 @@ public class GoalRepository : IGoalRepository
     {
         _connection.Open();
 
-        string query = "INSERT INTO Goal (guid, completionPercentage) VALUES (@id, @completionPercentage)";
+        string query = "INSERT INTO Goal (guid, completionPercentage) VALUES (@goalId, @completionPercentage)";
         MySqlCommand command = new MySqlCommand(query, _connection);
 
-        command.Parameters.AddWithValue("@id", goal.guid);
+        command.Parameters.AddWithValue("@goalId", goal.guid);
         command.Parameters.AddWithValue("@completionPercentage", goal.completionPercentage);
 
         command.ExecuteNonQuery();
@@ -85,14 +85,14 @@ public class GoalRepository : IGoalRepository
         _connection.Close();
     }
     // UpdateGoal to change a goal
-    public void UpdateGoal(IGoal goal, Guid id)
+    public void UpdateGoal(IGoal goal, Guid goalId)
     {
         _connection.Open();
 
-        string query = "UPDATE Goal SET completionPercentage = @completionPercentage WHERE guid = @id";
+        string query = "UPDATE Goal SET completionPercentage = @completionPercentage WHERE guid = @goalId";
         MySqlCommand command = new MySqlCommand(query, _connection);
 
-        command.Parameters.AddWithValue("@id", goal.guid);
+        command.Parameters.AddWithValue("@goalId", goal.guid);
         command.Parameters.AddWithValue("@completionPercentage", goal.completionPercentage);
 
         command.ExecuteNonQuery();
@@ -110,16 +110,16 @@ public class GoalRepository : IGoalRepository
     }
 
     // DeleteGoal to delete a single goal by ID
-    public void DeleteGoal(Guid id)
+    public void DeleteGoal(Guid goalId)
     {
         _connection.Open();
-        string query = "DELETE FROM Goal WHERE guid = @id";
+        string query = "DELETE FROM Goal WHERE guid = @goalId";
         var command = new MySqlCommand(query, _connection);
-        command.Parameters.AddWithValue("@id", id);
+        command.Parameters.AddWithValue("@goalId", goalId);
 
         command.ExecuteNonQuery();
 
-        MySqlCommand taskCommand = new MySqlCommand("DELETE FROM GoalTask WHERE goalGuid = @id",
+        MySqlCommand taskCommand = new MySqlCommand("DELETE FROM GoalTask WHERE goalGuid = @goalId",
             _connection);
         taskCommand.ExecuteNonQuery();
 

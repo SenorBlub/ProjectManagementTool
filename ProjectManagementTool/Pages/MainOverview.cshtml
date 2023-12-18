@@ -71,7 +71,7 @@
 					@{
 						try
 						{
-							if (Guid.TryParse(HttpContext.Session.GetString("UserId"), out Guid tUserId))
+							if (Guid.TryParse(HttpContext.Session.GetString("UserId"), out Guid tUserId)) //TODO logic layer stuffs
 							{
 								var tasksViewModel = new TasksViewModel
 								{
@@ -97,7 +97,7 @@
 			</div>
 			<div class="d-flex flex-column w-75 gap-2">
 			<div class="h-25 border p-2 gap-2" id="Goal"> 
-			@await Html.PartialAsync("Shared/GoalView", new Goal
+			@await Html.PartialAsync("Shared/GoalView", new Goal //TODO logic layer stuffs
 					{
 						guid = Guid.NewGuid(),
 						completionPercentage = 15,
@@ -126,7 +126,7 @@
 					})
 			</div>
 				<div class="h-75 border p-2 gap-2" id="projects">
-					@{
+					@{ //TODO logic layer stuffs
 						try
 						{
 							if (Guid.TryParse(HttpContext.Session.GetString("UserId"), out Guid pUserId))

@@ -17,13 +17,13 @@ public class EmployeeRepository : IEmployeeRepository
                 "Server=host.docker.internal;port=3312;Database=Project-Tool-Database;User=root;Password=password123;");
     }
     // GetEmployee to get a single employee by ID
-    public IEmployee GetEmployee(Guid id)
+    public IEmployee GetEmployee(Guid employeeId)
     {
         IEmployee employee = new Employee();
         _connection.Open();
-        string query = "SELECT * FROM Employee WHERE guid = @id";
+        string query = "SELECT * FROM Employee WHERE guid = @employeeId";
         using MySqlCommand command = new MySqlCommand(query, _connection);
-        command.Parameters.AddWithValue("@id", id);
+        command.Parameters.AddWithValue("@employeeId", employeeId);
 
         using MySqlDataReader reader = command.ExecuteReader();
 
@@ -59,13 +59,13 @@ public class EmployeeRepository : IEmployeeRepository
     }
 
     // GetEmployees to get all employees
-    public List<IEmployee> GetProjectEmployees(Guid id)
+    public List<IEmployee> GetProjectEmployees(Guid employeeId)
     {
         List<IEmployee> employees = new List<IEmployee>();
         _connection.Open();
-        string query = "SELECT * FROM EmployeeProject RIGHT JOIN Employee ON EmployeeProject.employeeGuid = Employee.guid WHERE projectGuid = @id"; // !TODO Clarity of definition
+        string query = "SELECT Employee.* FROM EmployeeProject RIGHT JOIN Employee ON EmployeeProject.employeeGuid = Employee.guid WHERE EmployeeProject.projectGuid = @employeeId"; // !TODO Clarity of definition
         using MySqlCommand command = new MySqlCommand(query, _connection); // !TODO only fetch relevant data (performance)
-        command.Parameters.AddWithValue("@id", id);
+        command.Parameters.AddWithValue("@employeeId", employeeId);
 
         using MySqlDataReader reader = command.ExecuteReader();
 
@@ -86,10 +86,10 @@ public class EmployeeRepository : IEmployeeRepository
     public void PostEmployee(IEmployee employee)
     {
         _connection.Open();
-        string query = "INSERT INTO Employee (guid, name, email) VALUES (@id, @name, @email)";
+        string query = "INSERT INTO Employee (guid, name, email) VALUES (@employeeId, @name, @email)";
         using MySqlCommand command = new MySqlCommand(query, _connection);
 
-        command.Parameters.AddWithValue("@id", employee.guid);
+        command.Parameters.AddWithValue("@employeeId", employee.guid);
         command.Parameters.AddWithValue("@name", employee.name);
         command.Parameters.AddWithValue("@email", employee.email);
 
@@ -98,13 +98,13 @@ public class EmployeeRepository : IEmployeeRepository
     }
 
     // UpdateEmployee to edit a single employee by ID
-    public void UpdateEmployee(IEmployee employee, Guid id)
+    public void UpdateEmployee(IEmployee employee, Guid employeeId)
     {
         _connection.Open();
-        string query = "Update Employee SET guid = @id, name =  @name, email = @email";
+        string query = "Update Employee SET guid = @employeeId, name =  @name, email = @email";
         using MySqlCommand command = new MySqlCommand(query, _connection);
 
-        command.Parameters.AddWithValue("@id", employee.guid);
+        command.Parameters.AddWithValue("@employeeId", employeeId);
         command.Parameters.AddWithValue("@name", employee.name);
         command.Parameters.AddWithValue("@email", employee.email);
 
@@ -113,12 +113,12 @@ public class EmployeeRepository : IEmployeeRepository
     }
 
     // DeleteEmployee to delete a single employee by ID
-    public void DeleteEmployee(Guid id)
+    public void DeleteEmployee(Guid employeeId)
     {
         _connection.Open();
-        string query = "DELETE FROM Employee WHERE guid = @id";
+        string query = "DELETE FROM Employee WHERE guid = @employeeId";
         var command = new MySqlCommand(query, _connection);
-        command.Parameters.AddWithValue("@id", id);
+        command.Parameters.AddWithValue("@employeeId", employeeId);
 
         command.ExecuteNonQuery();
         _connection.Close();

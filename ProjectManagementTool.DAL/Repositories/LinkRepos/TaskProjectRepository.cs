@@ -13,14 +13,14 @@ namespace ProjectManagementTool.DAL.Repositories
             _connection = new MySqlConnection("Server=host.docker.internal;port=3312;Database=Project-Tool-Database;User=root;Password=password123;");
         }
 
-        public void PostTaskProject(Guid task, Guid project)
+        public void PostTaskProject(Guid taskGuid, Guid projectGuid)
         {
             _connection.Open();
             string query = "INSERT INTO TaskProject (taskGuid, projectGuid) VALUES (@taskGuid, @projectGuid)";
             using MySqlCommand command = new MySqlCommand(query, _connection);
 
-            command.Parameters.AddWithValue("@taskGuid", task);
-            command.Parameters.AddWithValue("@projectGuid", project);
+            command.Parameters.AddWithValue("@taskGuid", taskGuid);
+            command.Parameters.AddWithValue("@projectGuid", projectGuid);
 
             command.ExecuteNonQuery();
             _connection.Close();

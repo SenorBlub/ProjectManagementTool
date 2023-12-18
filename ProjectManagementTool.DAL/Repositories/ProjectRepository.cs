@@ -15,13 +15,13 @@ public class ProjectRepository
                 "Server=host.docker.internal;port=3312;Database=Project-Tool-Database;User=root;Password=password123;");
     }
     // GetProject to display project by ID
-    public IProject GetProject(Guid id)
+    public IProject GetProject(Guid projectId)
     {
         IProject project = new Models.Project();
         _connection.Open();
-        string query = "SELECT * FROM Project WHERE ID = @id";
+        string query = "SELECT * FROM Project WHERE ID = @projectId";
         using MySqlCommand command = new MySqlCommand(query, _connection);
-        command.Parameters.AddWithValue("@id", id);
+        command.Parameters.AddWithValue("@projectId", projectId);
         using MySqlDataReader reader = command.ExecuteReader();
 
         while (reader.Read())
@@ -68,13 +68,13 @@ public class ProjectRepository
     }
 
     // GetEmployeeProjects to get all projects associated with a single employee
-    public IEnumerable<IProject> GetEmployeeProjects(Guid id)
+    public IEnumerable<IProject> GetEmployeeProjects(Guid projectId)
     {
         List<IProject> projects = new List<IProject>();
         _connection.Open();
-        string query = "SELECT * FROM EmployeeProject RIGHT JOIN Project ON EmployeeProject.projectGuid = Project.guid WHERE employeeGuid = @id";
+        string query = "SELECT Project.* FROM EmployeeProject RIGHT JOIN Project ON EmployeeProject.projectGuid = Project.guid WHERE employeeGuid = @projectId";
         using MySqlCommand command = new MySqlCommand(query, _connection);
-        command.Parameters.AddWithValue("@id", id);
+        command.Parameters.AddWithValue("@projectId", projectId);
         using MySqlDataReader reader = command.ExecuteReader();
 
         while (reader.Read())
@@ -101,10 +101,10 @@ public class ProjectRepository
     {
         _connection.Open();
 
-        string query = "INSERT INTO Project (guid, title, description, goalGuid, isNew) VALUES (@id, @title, @description, @goalGuid, @isNew)";
+        string query = "INSERT INTO Project (guid, title, description, goalGuid, isNew) VALUES (@projectId, @title, @description, @goalGuid, @isNew)";
         MySqlCommand command = new MySqlCommand(query, _connection);
 
-        command.Parameters.AddWithValue("@id", project.guid);
+        command.Parameters.AddWithValue("@projectId", project.guid);
         command.Parameters.AddWithValue("@title", project.title);
         command.Parameters.AddWithValue("@description", project.description);
         command.Parameters.AddWithValue("@goalGuid", project.goal.guid);
@@ -116,14 +116,14 @@ public class ProjectRepository
     }
 
     // UpdateProject to change any values associated with a project
-    public void UpdateProject(IProject project, Guid id)
+    public void UpdateProject(IProject project, Guid projectId)
     {
         _connection.Open();
 
-        string query = "UPDATE Project ON title = @title, description = @description, goalGuid = @goalGuid, isNew = @isNew) Where guid = @id";
+        string query = "UPDATE Project ON title = @title, description = @description, goalGuid = @goalGuid, isNew = @isNew) Where guid = @projectId";
         MySqlCommand command = new MySqlCommand(query, _connection);
 
-        command.Parameters.AddWithValue("@id", project.guid);
+        command.Parameters.AddWithValue("@projectId", projectId);
         command.Parameters.AddWithValue("@title", project.title);
         command.Parameters.AddWithValue("@description", project.description);
         command.Parameters.AddWithValue("@goalGuid", project.goal.guid);
@@ -153,22 +153,22 @@ public class ProjectRepository
     }
 
     // DeleteProject to remove a project by ID
-    public void DeleteProject(Guid id)
+    public void DeleteProject(Guid projectId)
     {
         _connection.Open();
-            string query = "DELETE FROM Project WHERE guid = @id";
+            string query = "DELETE FROM Project WHERE guid = @projectId";
             var command = new MySqlCommand(query, _connection);
-            command.Parameters.AddWithValue("@id", id);
+            command.Parameters.AddWithValue("@projectId", projectId);
 
             command.ExecuteNonQuery();
-            string query2 = "DELETE FROM EmployeeProject WHERE guid = @id";
+            string query2 = "DELETE FROM EmployeeProject WHERE guid = @projectId";
             var command2 = new MySqlCommand(query, _connection);
-            command.Parameters.AddWithValue("@id", id);
+            command.Parameters.AddWithValue("@projectId", projectId);
 
             command.ExecuteNonQuery();
-            string query3 = "DELETE FROM TaskProject WHERE guid = @id";
+            string query3 = "DELETE FROM TaskProject WHERE guid = @projectId";
             var command3 = new MySqlCommand(query, _connection);
-            command.Parameters.AddWithValue("@id", id);
+            command.Parameters.AddWithValue("@projectId", projectId);
 
             command.ExecuteNonQuery();
         _connection.Close();
